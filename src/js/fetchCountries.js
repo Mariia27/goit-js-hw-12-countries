@@ -1,17 +1,12 @@
-function fetchCountries(searchQuery) {
-    const url = `https://restcountries.eu/rest/v2/name/${searchQuery}`; 
-    // const options = {
-    //     headers: {
-    //          Autorization:'//key'
-    //      }
-    // }
-    return fetch(url)
+const BASE_URL = 'https://restcountries.eu/rest/v2/name';
+export default  function fetchCountries(searchQuery) {
+  
+    return fetch(`${BASE_URL}/${searchQuery}`)
         .then(response => {
-            if (response.ok) {
+            if (response) {
                 return response.json();
             }
         })
     
 };
 
-export default fetchCountries

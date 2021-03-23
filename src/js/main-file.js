@@ -1,14 +1,12 @@
 
 import countryCard from '../templates/country-card.hbs';
 import countryList from '../templates/country-list.hbs'
-import API from '../js/fetchCountries';
+import fetchCountries from '../js/fetchCountries';
 import getRefs from '../js/get-refs.js';
 import  error  from '../js/error.js';
 const debounce = require('lodash.debounce');
-
-
 const refs = getRefs();
-
+let inputEl = '';
 refs.search.addEventListener('input', debounce(onSearch, 500));
 //катка країни
 function renderCountryCard(country) {
@@ -21,24 +19,23 @@ function renderCountryList(country) {
     refs.cardConteiner.insertAdjacentHTML('beforeend', markup);
 }
 
-function onSearch(evt) {
+function onSearch() {
     clearContainer();
-
-    const form = evt.currentTarget;
-    const searchQuery = form.query.value;
-    API.fetchCountries(searchQuery)
-        .then(renderCountryCard)
-        .catch(onFetchError)
-        .finaly(() => form.reset())
+    inputEl = refs.searchEl.value;
+    fetchCountries(inputEl)
+        .then(marcup)
+        .catch(onFetchError())
+       
 }
 function onFetchError(error) {
     alert('не найдено!');
 }
 function marcup(data) {
     if (data.length === 1) {
-        renderCountryList(data)
-    }
-    if (data.length > 0 && data.length <= 10) {
+        clearContainer();
+        renderCountryList(data);
+    }else
+    if (data.length > 1 && data.length <= 10) {
         renderCountryCard(data)
     } else {
         error({
