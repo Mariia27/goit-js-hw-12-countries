@@ -7,7 +7,7 @@ import  error  from '../js/error.js';
 const debounce = require('lodash.debounce');
 const refs = getRefs();
 //let inputEl = '';
-refs.searchEl.addEventListener('input', debounce(onSearch, 500));
+refs.searchEl.addEventListener('input', debounce(onSearch, 1500));
 //катка країни
 function renderCountryCard(country) {
     const markup = countryCard(country);
@@ -21,11 +21,11 @@ function renderCountryList(country) {
 
 function onSearch(e) {
     clearContainer();
-    e.preventDefault();bn
+    e.preventDefault();
     const inputEl = e.target.value;
     API(inputEl)
         .then(marcup)
-        .catch(onFetchError(error))
+        .catch(onFetchError)
        
 }
 function onFetchError(error) {
@@ -39,12 +39,15 @@ function marcup(data) {
     }else
     if (data.length > 1 && data.length <= 10) {
         renderCountryList(data);
-    } else {
-        error({
-      title: 'Too many matches found. Please enter a more specific query!',
-      delay: 2000,
-    });
     }
+    if (data.length > 10) {
+         error({
+      title: 'Too many matches found. Please enter a more specific query!',
+      delay: 3000,
+    }); 
+    }
+      
+    
 }
 function clearContainer() {
     refs.cardConteiner.innerHTML = '';
